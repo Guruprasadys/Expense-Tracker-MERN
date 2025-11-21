@@ -62,11 +62,24 @@ const History = () => {
     setFilteredExpenses(filtered);
   }, [expenses, filter]);
 
-  const filterOptions: Array<'all' | 'yesterday' | 'last7' | 'last30'> = ['all', 'yesterday', 'last7', 'last30'];
+  const filterOptions: Array<'all' | 'yesterday' | 'last7' | 'last30'> = [
+    'all', 'yesterday', 'last7', 'last30'
+  ];
 
   return (
     <div className="min-h-screen bg-blue-50 p-6">
       <div className="max-w-6xl mx-auto">
+
+        {/* Back to Dashboard Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="px-6 py-3 bg-gray-800 text-white rounded-xl shadow-md hover:bg-gray-900 transition"
+          >
+            ← Back to Dashboard
+          </button>
+        </div>
+
         {/* Header */}
         <h2 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
           Expense History
@@ -81,8 +94,7 @@ const History = () => {
               className={`px-6 py-2 rounded-full font-semibold transition
                 ${filter === f
                   ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg transform scale-105"
-                  : "bg-white text-gray-700 hover:bg-gray-100 shadow"}`
-              }
+                  : "bg-white text-gray-700 hover:bg-gray-100 shadow"}`}
             >
               {f === "all"
                 ? "All"
@@ -107,7 +119,9 @@ const History = () => {
 
         {/* Expenses Grid */}
         {filteredExpenses.length === 0 ? (
-          <p className="text-center text-gray-500 text-xl">No expenses found for this period.</p>
+          <p className="text-center text-gray-500 text-xl">
+            No expenses found for this period.
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredExpenses.map(exp => (
@@ -115,6 +129,19 @@ const History = () => {
                 key={exp._id}
                 className="relative bg-white rounded-3xl shadow-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 flex flex-col justify-between"
               >
+                {/* IMAGE */}
+                {exp.imageUrl ? (
+                  <img
+                    src={exp.imageUrl}
+                    alt={exp.title}
+                    className="w-full h-40 object-cover rounded-2xl mb-4 border border-gray-300"
+                  />
+                ) : (
+                  <div className="w-full h-40 flex items-center justify-center rounded-2xl bg-gray-100 text-gray-400 font-semibold text-sm mb-4 border border-gray-200">
+                    No Image
+                  </div>
+                )}
+
                 {/* Expense Title & Category */}
                 <div className="mb-4">
                   <h3 className="text-lg font-bold text-gray-900">{exp.title}</h3>
