@@ -52,7 +52,7 @@ router.get("/", protect, async (req, res) => {
 /**
  * POST /api/expenses
  */
-router.post("/", protect, upload.single("image"), async (req, res) => {
+router.post("/", protect,  async (req, res) => {
   try {
     let imageUrl = null;
 
