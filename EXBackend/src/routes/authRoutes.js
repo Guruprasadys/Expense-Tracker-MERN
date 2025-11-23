@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // make sure User schema has "balance" field
+const User = require("../models/User");
 
 // ------------------------------
-// ✅ Signup Route
+// Signup Route
 // ------------------------------
 router.post("/signup", async (req, res) => {
   try {
@@ -16,24 +16,19 @@ router.post("/signup", async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
+    }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Default balance = 0
+    // ❗ DON'T HASH HERE — Model hashes it automatically
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
-      balance: 0, 
+      password,
     });
 
     await newUser.save();
 
-    // Generate JWT
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -46,16 +41,16 @@ router.post("/signup", async (req, res) => {
         name: newUser.name,
         email: newUser.email,
       },
-      balance: newUser.balance, // send balance for frontend
+      balance: newUser.balance,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("SIGNUP ERROR:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // ------------------------------
-// ✅ Login Route
+// Login Route
 // ------------------------------
 router.post("/login", async (req, res) => {
   try {
@@ -65,12 +60,20 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Email and password required" });
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "User not found" });
+    if (!user) {
+      console.log("User not found");
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
 
+    console.log("Entered:", password);
+    console.log("Stored:", user.password);
+
+    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) {
+      console.log("Password mismatch");
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -84,11 +87,11 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
       },
-      balance: user.balance || 0, // send balance to frontend
+      balance: user.balance || 0,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("LOGIN ERROR:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
