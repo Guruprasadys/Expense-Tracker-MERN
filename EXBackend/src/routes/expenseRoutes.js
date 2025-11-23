@@ -7,7 +7,7 @@ const Income = require("../models/Income");  // ✅ added
 const { pinFileToPinata } = require("../utils/pinata");
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+
 
 /**
  * Helper function: calculate balance
