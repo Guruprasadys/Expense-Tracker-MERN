@@ -84,6 +84,6 @@ export default function Signup() {
           Already have an account? <Link to="/login" className="text-purple-600 font-medium hover:underline">Login</Link>
         </p>
       </form>
-    </div>
+    </div> 
   );
 }
