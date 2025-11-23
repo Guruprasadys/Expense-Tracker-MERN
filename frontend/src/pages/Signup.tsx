@@ -33,7 +33,7 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", form);
+      await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/auth/signup`, form);
 
       // Store ONLY email for login prefill
       localStorage.setItem("signupEmail", form.email);

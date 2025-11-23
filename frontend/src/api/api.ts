@@ -2,8 +2,10 @@ import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { SignupData, LoginData } from '../types/api';
 
+
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL:`${import.meta.env.VITE_BACKEND_URI}/api`
+  
 });
 
 // Updated AuthResponse to include balance
@@ -39,6 +41,7 @@ export const getExpenses = (token: string) =>
   API.get('/expenses', {
     headers: {
       Authorization: `Bearer ${token}`,
+    
     },
   });
 

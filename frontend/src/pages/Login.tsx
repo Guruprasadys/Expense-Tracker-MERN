@@ -33,7 +33,7 @@ export default function Login() {
     console.log("FORM BEFORE LOGIN:", form); // Debug (check password value)
 
     try {
-      const { data } = await axios.post("http://localhost:5000/api/auth/login", form);
+      const { data } = await axios.post( `${import.meta.env.VITE_BACKEND_URI}/api/auth/login`, form);
 
       const { token, user, balance } = data;
 

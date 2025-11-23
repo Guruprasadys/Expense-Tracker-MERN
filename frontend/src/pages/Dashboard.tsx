@@ -32,6 +32,7 @@ const Dashboard = () => {
     try {
       // Fetch expenses
       const res = await getExpenses(token);
+      console.log(res)
       const expData: Expense[] = res.data.expenses || res.data || [];
       setExpenses(expData);
 
@@ -81,7 +82,7 @@ const Dashboard = () => {
     if (!token) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/expenses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchExpenses();
